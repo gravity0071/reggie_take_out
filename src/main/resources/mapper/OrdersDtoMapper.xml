@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raggie.mapper.OrdersDtoMapper">
+
+<resultMap id="test" type="com.raggie.dto.OrdersDto">
+    <id  property="id" column="id"></id>
+    <result  property="number" column="number"></result>
+    <result  property="status" column="status"></result>
+    <result  property="userId" column="user_id"></result>
+    <result  property="addressBookId" column="address_book_id"></result>
+    <result  property="orderTime" column="order_time"></result>
+    <result  property="checkoutTime" column="checkout_time"></result>
+    <result  property="payMethod" column="pay_method"></result>
+    <result  property="amount" column="amount"></result>
+    <result  property="remark" column="remark"></result>
+    <result  property="phone" column="phone"></result>
+    <result  property="address" column="address"></result>
+    <result  property="userName" column="user_name"></result>
+    <result  property="consignee" column="consignee"></result>
+    <collection property="orderDetails" ofType="com.raggie.entity.OrderDetail">
+        <id property="id" column="detail.id"></id>
+        <result property="name" column="name"></result>
+        <result property="image" column="image"></result>
+        <result property="orderId" column="order_id"></result>
+        <result property="dishId" column="dish_id"></result>
+        <result property="setmealId" column="setmeal_id"></result>
+        <result property="dishFlavor" column="dish_flavor"></result>
+        <result property="number" column="detail.number"></result>
+        <result property="amount" column="detail.amount"></result>
+    </collection>
+</resultMap>
+    <select id="searchForOther" resultMap="test">
+        SELECT orders.*, detail.* from orders orders left join order_detail detail on orders.id = detail.order_id  where orders.user_id = #{id}  order by orders.order_time desc
+    </select>
+</mapper>
