@@ -1,13 +1,15 @@
 package com.raggie.common;
 
 import lombok.Data;
+
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 /*return type
 *
 */
 @Data
-public class R<T> {
+public class R<T> implements Serializable {
 
     private Integer code; //1:success，other: fail
 

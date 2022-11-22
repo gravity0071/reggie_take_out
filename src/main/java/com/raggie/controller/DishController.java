@@ -154,6 +154,4 @@ public class DishController {
         redisTemplate.delete(keys);
         return R.success("delete success!");
     }
-
-
 }
