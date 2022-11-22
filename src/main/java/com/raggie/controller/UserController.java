@@ -9,6 +9,7 @@ import com.raggie.utils.ValidateCodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
@@ -24,6 +26,8 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @PostMapping("/sendMsg")
     public R<String> sendMsg(@RequestBody User user, HttpSession session){
@@ -33,7 +37,9 @@ public class UserController {
             String s = ValidateCodeUtils.generateValidateCode(4).toString();
             log.info(s + "  ___________");
 //            SMSUtils.sendMessage("",,phone,code);
-            session.setAttribute(phone, s);
+//            session.setAttribute(phone, s);
+            //add the code into redis
+            redisTemplate.opsForValue().set(phone, s,5, TimeUnit.MINUTES);
             return R.success("send success");
         }
         return R.error("send failed");
@@ -45,7 +51,9 @@ public class UserController {
         String phone = map.get("phone").toString();
         String code = map.get("code").toString();
 
-        Object codeInSession = session.getAttribute(phone);
+//        Object codeInSession = session.getAttribute(phone);
+        //get code from redis
+        Object codeInSession = redisTemplate.opsForValue().get(phone);
         if(codeInSession != null && codeInSession.equals(code)){
             LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(User::getPhone, phone);
@@ -55,6 +63,8 @@ public class UserController {
                 user.setPhone(phone);
                 userService.save(user);
             }
+            //delete the code from redis
+            redisTemplate.delete(phone);
             session.setAttribute("user",user.getId());
             return  R.success(user);
         }
