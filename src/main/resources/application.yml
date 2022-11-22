@@ -11,6 +11,11 @@ spring:
       password: 211516?W
       filter:
         enabled: false
+  redis:
+    host: 49.232.53.238
+    port: 6379
+    password: root@123456
+    database: 0
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
