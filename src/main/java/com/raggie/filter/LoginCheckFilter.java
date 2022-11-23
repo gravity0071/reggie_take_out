@@ -35,7 +35,11 @@ public class LoginCheckFilter implements Filter {
                 "/front/**",
                 "/commen/**",
                 "/user/sendMsg",
-                "/user/login"
+                "/user/login",
+                "/doc.html",
+                "/webjars/**",
+                "/swagger-resources",
+                "/v2/api-docs"
         };
 
         String[] back = new String[]{
