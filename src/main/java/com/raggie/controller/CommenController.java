@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -27,6 +28,7 @@ public class CommenController {
 
     @Value("${reggie.path}")
     private String basePath;
+
 
     @PostMapping("/upload")
     //parameter must be file because in the request, it defined the name is file

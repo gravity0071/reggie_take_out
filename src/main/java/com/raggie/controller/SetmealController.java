@@ -74,6 +74,7 @@ public class SetmealController {
     }
 
     @PostMapping("/status/{status}")
+    @CacheEvict(value = "setmealCache", allEntries = true) //clear all setmealCache
     public R<String> change(@RequestParam List<Long> ids, @PathVariable("status") int status){
         if(ids == null) throw new CustomException("can't select nothing");
         LambdaUpdateWrapper<Setmeal> queryWrapper = new LambdaUpdateWrapper<>();
@@ -93,5 +94,11 @@ public class SetmealController {
                 .orderByDesc(Setmeal::getUpdateTime);
         List<Setmeal> list = setmealService.list(queryWrapper);
         return R.success(list);
+    }
+
+    @GetMapping("/{id}")
+    public R<Setmeal> getDetail(@PathVariable("id") Long id){
+        Setmeal byId = setmealService.getById(id);
+        return R.success(byId);
     }
 }

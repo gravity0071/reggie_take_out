@@ -144,6 +144,8 @@ public class DishController {
         queryWrapper.in(ids != null, Dish::getId, ids)
                 .set(Dish::getStatus, status);
         dishService.update(queryWrapper);
+        Set keys = redisTemplate.keys("dish_*");
+        redisTemplate.delete(keys);
         return R.success("modify success!");
     }
 
